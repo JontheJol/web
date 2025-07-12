@@ -1,6 +1,6 @@
 # React TypeScript App
 
-Una aplicación completa de React con TypeScript que demuestra el uso de las siguientes tecnologías:
+Una aplicación completa de React con TypeScript que usa las siguientes tecnologias
 
 ## 🚀 Tecnologías Utilizadas
 
