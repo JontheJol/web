@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
@@ -9,6 +9,7 @@ import Users from './pages/Users';
 import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import { useAppStore } from './store/appStore';
 
 const theme = createTheme({
@@ -75,6 +76,7 @@ function App() {
           >
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/" element={
                 <ProtectedRoute>
                   <Home />

@@ -13,6 +13,16 @@ export interface AuthUser {
   email: string;
 }
 
+export interface RegisterData {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  curp: string;
+  rfc: string;
+  email: string;
+  password: string;
+}
+
 interface AppState {
   users: User[];
   loading: boolean;
@@ -30,12 +40,13 @@ interface AppState {
   setError: (error: string | null) => void;
   // Auth actions
   login: (email: string, password: string) => Promise<void>;
+  register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   setAuthLoading: (loading: boolean) => void;
   setAuthError: (error: string | null) => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>((set, get) => ({
   users: [
     { id: 1, name: 'Juan Pérez', email: 'juan@example.com', age: 30 },
     { id: 2, name: 'María García', email: 'maria@example.com', age: 25 },
@@ -90,6 +101,43 @@ export const useAppStore = create<AppState>((set) => ({
         authError: 'Credenciales incorrectas. Intenta con admin@booksmart.com / password',
       });
     }
+  },
+  register: async (data: RegisterData) => {
+    set({ authLoading: true, authError: null });
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Check if email already exists (simple validation)
+    const existingUser = get().users.find(user => user.email === data.email);
+    if (existingUser) {
+      set({
+        authLoading: false,
+        authError: 'Este correo electrónico ya está registrado',
+      });
+      return;
+    }
+    
+    // Create new user and authenticate
+    const newUser = {
+      id: Date.now(),
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      age: 25, // Default age for demo
+    };
+    
+    // Add to users list and authenticate
+    set((state) => ({
+      users: [...state.users, newUser],
+      isAuthenticated: true,
+      currentUser: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+      authLoading: false,
+      authError: null,
+    }));
   },
   logout: () => 
     set({

@@ -25,7 +25,6 @@ interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;
   loading: boolean;
   error: string | null;
-  onRegisterClick?: () => void;
 }
 
 const schema = yup.object({
@@ -43,7 +42,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onLogin,
   loading,
   error,
-  onRegisterClick,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -226,7 +224,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <Link
           component="button"
           type="button"
-          onClick={onRegisterClick}
+          onClick={() => navigate('/register')}
           sx={{
             fontFamily: 'League Spartan, sans-serif',
             fontWeight: 600,

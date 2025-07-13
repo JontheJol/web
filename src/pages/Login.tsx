@@ -4,14 +4,7 @@ import LoginForm from '../components/LoginForm';
 import { useAppStore } from '../store/appStore';
 
 const Login: React.FC = () => {
-  const { login, authLoading, authError, setAuthError } = useAppStore();
-
-  const handleRegisterClick = () => {
-    // Clear any existing errors
-    setAuthError(null);
-    // You can add navigation to register page here
-    console.log('Navigate to register page');
-  };
+  const { login, authLoading, authError } = useAppStore();
 
   return (
     <Box
@@ -82,7 +75,6 @@ const Login: React.FC = () => {
               onLogin={login}
               loading={authLoading}
               error={authError}
-              onRegisterClick={handleRegisterClick}
             />
           </Box>
 
