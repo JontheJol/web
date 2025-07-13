@@ -45,10 +45,6 @@ src/
 │   ├── UserForm.tsx     # Formulario de usuarios
 │   └── UsersTable.tsx   # Tabla de usuarios
 ├── pages/              # Páginas principales
-│   ├── Home.tsx        # Página de inicio
-│   ├── Users.tsx       # Lista de usuarios
-│   ├── AddUser.tsx     # Agregar usuario
-│   └── EditUser.tsx    # Editar usuario
 ├── store/              # Gestión de estado
 │   └── appStore.ts     # Store principal con Zustand
 ├── types/              # Definiciones de tipos
