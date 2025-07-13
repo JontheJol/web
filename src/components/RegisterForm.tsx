@@ -16,6 +16,7 @@ import {
 import { Visibility, VisibilityOff, ArrowBack } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import type { RegisterData } from '../store/appStore';
+import { REGEX_PATTERNS, VALIDATION_MESSAGES } from '../utils/regexPatterns';
 
 interface RegisterFormData extends RegisterData {}
 
@@ -30,34 +31,31 @@ const schema = yup.object({
   firstName: yup
     .string()
     .required('El nombre es requerido')
-    .min(2, 'El nombre debe tener al menos 2 caracteres'),
+    .matches(REGEX_PATTERNS.NAME, VALIDATION_MESSAGES.NAME),
   lastName: yup
     .string()
     .required('El apellido es requerido')
-    .min(2, 'El apellido debe tener al menos 2 caracteres'),
+    .matches(REGEX_PATTERNS.NAME, VALIDATION_MESSAGES.NAME),
   phone: yup
     .string()
     .required('El celular es requerido')
-    .matches(/^\d{10}$/, 'El celular debe tener 10 dígitos'),
+    .matches(REGEX_PATTERNS.PHONE, VALIDATION_MESSAGES.PHONE),
   curp: yup
     .string()
     .required('El CURP es requerido')
-    .matches(/^[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}$/, 'Formato de CURP inválido'),
+    .matches(REGEX_PATTERNS.CURP, VALIDATION_MESSAGES.CURP),
   rfc: yup
     .string()
     .required('El RFC es requerido')
-    .matches(/^[A-Z&Ñ]{3,4}\d{6}[A-V1-9][A-Z1-9][0-9A]$/, 'Formato de RFC inválido'),
+    .matches(REGEX_PATTERNS.RFC, VALIDATION_MESSAGES.RFC),
   email: yup
     .string()
-    .email('Ingresa un correo electrónico válido')
-    .required('El correo electrónico es requerido'),
+    .required('El correo electrónico es requerido')
+    .matches(REGEX_PATTERNS.EMAIL, VALIDATION_MESSAGES.EMAIL),
   password: yup
     .string()
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .matches(/(?=.*[a-z])/, 'Debe contener al menos una minúscula')
-    .matches(/(?=.*[A-Z])/, 'Debe contener al menos una mayúscula')
-    .matches(/(?=.*\d)/, 'Debe contener al menos un número')
-    .required('La contraseña es requerida'),
+    .required('La contraseña es requerida')
+    .matches(REGEX_PATTERNS.PASSWORD, VALIDATION_MESSAGES.PASSWORD),
 });
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -153,25 +151,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         {/* BookSmart Logo */}
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Box
+            component="img"
+            src="/booksmart Logo.svg"
+            alt="BookSmart Logo"
             sx={{
-              fontSize: '40px',
-              mb: 1,
+              width: '80px',
+              height: '80px',
+              objectFit: 'contain',
             }}
-          >
-            📚🌳
-          </Box>
-          <Typography
-            variant="h6"
-            sx={{
-              fontFamily: 'League Spartan, sans-serif',
-              fontWeight: 700,
-              color: '#2e5131',
-              fontSize: '24px',
-              letterSpacing: '1px',
-            }}
-          >
-            BookSmart
-          </Typography>
+          />
         </Box>
 
         {/* Title */}

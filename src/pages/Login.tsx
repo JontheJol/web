@@ -96,55 +96,20 @@ const Login: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: '20px',
-                background: 'linear-gradient(135deg, #f3edf7 0%, #e8f5e8 100%)',
-                boxShadow: '0 10px 30px rgba(69, 55, 38, 0.1)',
                 position: 'relative',
               }}
             >
-              {/* Book and Tree Icon */}
+              {/* BookSmart Logo */}
               <Box
+                component="img"
+                src="/booksmart Logo.svg"
+                alt="BookSmart Logo"
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 2,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
                 }}
-              >
-                {/* Tree Icon */}
-                <Box
-                  sx={{
-                    fontSize: { xs: '80px', sm: '100px', md: '120px' },
-                    color: '#2e5131',
-                  }}
-                >
-                  🌳
-                </Box>
-                {/* Book Icon */}
-                <Box
-                  sx={{
-                    fontSize: { xs: '60px', sm: '80px', md: '100px' },
-                    color: '#8B4513',
-                    mt: -4,
-                  }}
-                >
-                  📚
-                </Box>
-                {/* BookSmart Text */}
-                <Box
-                  sx={{
-                    fontFamily: 'League Spartan, sans-serif',
-                    fontWeight: 700,
-                    fontSize: { xs: '32px', sm: '40px', md: '48px' },
-                    color: '#2e5131',
-                    textAlign: 'center',
-                    letterSpacing: '2px',
-                    mt: 2,
-                  }}
-                >
-                  BookSmart
-                </Box>
-              </Box>
+              />
             </Box>
           </Box>
         </Box>
