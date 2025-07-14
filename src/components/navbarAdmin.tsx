@@ -6,7 +6,7 @@ import { Box, Drawer, IconButton, Typography, useMediaQuery, useTheme } from '@m
 import { useState } from 'react';
 import BookIcon from '../assets/bookIcon';
 import EstanteIcon from '../assets/estantesIcon';
-import HomeIcon from '../assets/homeComponent';
+import HomeIcon from '../assets/homeIcon';
 import LogoutIcon from '../assets/logoutIcon';
 import SettingsIcon from '../assets/settingsIcon';
 import UserIcon from '../assets/userIcon';
