@@ -1,15 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import ProtectedRoute from './components/ProtectedRoute';
-import Home from './pages/Home';
-import Users from './pages/Users';
 import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
+import Estantes from './pages/Estantes';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Users from './pages/Users';
 import { useAppStore } from './store/appStore';
 
 const theme = createTheme({
@@ -96,6 +97,9 @@ function App() {
                 <ProtectedRoute>
                   <EditUser />
                 </ProtectedRoute>
+              } />
+              <Route path="/estantes" element={
+                  <Estantes />
               } />
             </Routes>
           </Container>
