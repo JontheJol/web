@@ -1,4 +1,6 @@
 // src/components/FigmaSidebar.jsx
+import '@fontsource/league-spartan/500.css';
+import '@fontsource/league-spartan/600.css';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Box, Drawer, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
