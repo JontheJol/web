@@ -153,25 +153,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         {/* BookSmart Logo */}
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Box
+            component="img"
+            src="/booksmart Logo.svg"
+            alt="BookSmart Logo"
             sx={{
-              fontSize: '40px',
-              mb: 1,
+              width: '120px',
+              height: 'auto',
+              objectFit: 'contain',
             }}
-          >
-            📚🌳
-          </Box>
-          <Typography
-            variant="h6"
-            sx={{
-              fontFamily: 'League Spartan, sans-serif',
-              fontWeight: 700,
-              color: '#2e5131',
-              fontSize: '24px',
-              letterSpacing: '1px',
-            }}
-          >
-            BookSmart
-          </Typography>
+          />
         </Box>
 
         {/* Title */}
