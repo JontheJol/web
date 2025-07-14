@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { REGEX_PATTERNS, VALIDATION_MESSAGES } from '../utils/regexPatterns';
 
 interface LoginFormData {
   email: string;
@@ -31,12 +30,12 @@ interface LoginFormProps {
 const schema = yup.object({
   email: yup
     .string()
-    .required('El correo electrónico es requerido')
-    .matches(REGEX_PATTERNS.EMAIL, VALIDATION_MESSAGES.EMAIL),
+    .email('Ingresa un correo electrónico válido')
+    .required('El correo electrónico es requerido'),
   password: yup
     .string()
-    .required('La contraseña es requerida')
-    .matches(REGEX_PATTERNS.PASSWORD, VALIDATION_MESSAGES.PASSWORD),
+    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .required('La contraseña es requerida'),
 });
 
 const LoginForm: React.FC<LoginFormProps> = ({
