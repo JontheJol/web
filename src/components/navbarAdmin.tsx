@@ -1,6 +1,7 @@
 // src/components/FigmaSidebar.jsx
 import '@fontsource/league-spartan/500.css';
 import '@fontsource/league-spartan/600.css';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Box, Drawer, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
@@ -22,24 +23,52 @@ const menuItems = [
 const NavbarAdmin = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [isOpen, setIsOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    if (isMobile) {
+      setMobileOpen(!mobileOpen);
+    } else {
+      setIsOpen(!isOpen);
+    }
   };
 
   const NavbarContent = () => (
     <Box
       sx={{
-        width: { xs: '250px', sm: '300px' },
+        width: { 
+          xs: '250px', 
+          sm: isOpen ? '300px' : '80px' 
+        },
         height: '100vh',
         bgcolor: '#453726',
         color: '#FFF9EC',
         position: 'relative',
         fontFamily: 'League Spartan, sans-serif',
         overflow: 'hidden',
+        transition: 'width 0.3s ease',
       }}
     >
+      {/* Toggle button */}
+      <IconButton
+        onClick={handleDrawerToggle}
+        sx={{
+          position: 'absolute',
+          right: 1,
+          top: 10,
+          color: '#FFF9EC',
+          '&:hover': {
+            bgcolor: 'rgba(255, 249, 236, 0.1)',
+          }
+        }}
+      >
+        <ChevronLeftIcon sx={{ 
+          transform: !isOpen ? 'rotate(180deg)' : 'none',
+          transition: 'transform 0.3s ease'
+        }} />
+      </IconButton>
+
       {/* Top greeting */}
       <Typography
         sx={{
@@ -48,9 +77,12 @@ const NavbarAdmin = () => {
           lineHeight: '20px',
           letterSpacing: '0.1px',
           position: 'absolute',
-          top: { xs: 50, sm: 70 },
+          top: { xs: 40, sm: 50 }, // Moved up
           left: { xs: 25, sm: 35 },
-          width: '220px',
+          maxWidth: '220px',
+          opacity: isOpen ? 1 : 0,
+          transition: 'opacity 0.2s ease',
+          display: { sm: isOpen ? 'block' : 'none' }
         }}
       >
         Hola, administrador
@@ -59,11 +91,15 @@ const NavbarAdmin = () => {
       {/* Top divider */}
       <Box
         sx={{
-          width: { xs: '225px', sm: '275px' },
+          width: { 
+            xs: '225px', 
+            sm: isOpen ? '275px' : '60px' 
+          },
           borderBottom: '4px solid #3A332A',
           position: 'absolute',
-          top: { xs: 138, sm: 158 },
-          left: { xs: 13, sm: 18 },
+          top: { xs: 108, sm: 128 }, // Moved up
+          left: { xs: 13, sm: 10 },
+          transition: 'width 0.3s ease',
         }}
       />
 
@@ -71,11 +107,13 @@ const NavbarAdmin = () => {
       <Box
         sx={{
           position: 'absolute',
-          top: { xs: 176, sm: 196 },
-          left: { xs: 13, sm: 18 },
+          top: { xs: 136, sm: 156 },
+          left: { xs: 13, sm: 10 },
           display: 'flex',
           flexDirection: 'column',
-          gap: { xs: '32px', sm: '42px' },
+          gap: { xs: '28px', sm: '36px' }, // Increased spacing between items
+          width: 'calc(100% - 20px)',
+          paddingBottom: '120px' // Increased bottom padding
         }}
       >
         {menuItems.map(({ label, icon }, index) => (
@@ -83,27 +121,47 @@ const NavbarAdmin = () => {
             key={index}
             sx={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               gap: 2,
-              height: '48px',
+              minHeight: '48px', // Increased back
+              height: 'auto',
               pl: '12px',
               cursor: 'pointer',
               '&:hover': {
                 bgcolor: 'rgba(255, 249, 236, 0.1)',
                 borderRadius: '8px',
               },
+              pr: 2,
+              width: isOpen ? 'calc(100% - 16px)' : '48px',
+              justifyContent: isOpen ? 'flex-start' : 'center',
+              transition: 'all 0.3s ease',
+              mr: 1,
+              py: 1, // Increased vertical padding
             }}
           >
-            <Box sx={{ color: '#FFF9EC' }}>{icon}</Box>
+            <Box sx={{ 
+              color: '#FFF9EC',
+              minWidth: '24px',
+              display: 'flex',
+              justifyContent: 'center',
+              flexShrink: 0,
+              mt: '2px',
+            }}>{icon}</Box>
             <Typography
               sx={{
-                fontSize: { xs: '24px', sm: '28px' },
+                fontSize: { xs: '22px', sm: '26px' },
                 fontWeight: 600,
-                lineHeight: '20px',
+                lineHeight: '26px', // Reduced
                 letterSpacing: '0.1px',
+                opacity: isOpen ? 1 : 0,
+                transition: 'opacity 0.2s ease',
+                display: { sm: isOpen ? 'block' : 'none' },
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                maxWidth: '180px',
               }}
             >
-              {label}
+              {label.includes('Contraseña') ? 'Cambiar\nContraseña' : label}
             </Typography>
           </Box>
         ))}
@@ -112,11 +170,15 @@ const NavbarAdmin = () => {
       {/* Bottom divider */}
       <Box
         sx={{
-          width: { xs: '225px', sm: '275px' },
+          width: { 
+            xs: '225px', 
+            sm: isOpen ? '275px' : '60px' 
+          },
           borderBottom: '4px solid #3A332A',
           position: 'absolute',
-          bottom: { xs: 100, sm: 120 },
-          left: { xs: 13, sm: 18 },
+          bottom: { xs: 80, sm: 100 }, // Moved up
+          left: { xs: 13, sm: 10 },
+          transition: 'width 0.3s ease',
         }}
       />
 
@@ -124,8 +186,8 @@ const NavbarAdmin = () => {
       <Box
         sx={{
           position: 'absolute',
-          bottom: { xs: 40, sm: 60 },
-          left: { xs: 13, sm: 18 },
+          bottom: { xs: 20, sm: 40 }, // Moved up
+          left: { xs: 13, sm: 10 },
           display: 'flex',
           alignItems: 'center',
           gap: 2,
@@ -135,14 +197,35 @@ const NavbarAdmin = () => {
             bgcolor: 'rgba(255, 249, 236, 0.1)',
             borderRadius: '8px',
           },
+          pr: 2,
+          width: isOpen ? 'calc(100% - 24px)' : '48px', // Adjust width to prevent overflow
+          justifyContent: isOpen ? 'flex-start' : 'center',
+          transition: 'all 0.3s ease',
+          mr: 1,
         }}
       >
-        <LogoutIcon />
+        <Box sx={{ 
+          color: '#FFF9EC',
+          minWidth: '24px',
+          display: 'flex',
+          justifyContent: 'center',
+          flexShrink: 0, // Prevent icon from shrinking
+        }}>
+          <LogoutIcon />
+        </Box>
         <Typography
           sx={{
-            fontSize: { xs: '24px', sm: '28px' },
+            fontSize: { xs: '22px', sm: '26px' }, // Slightly reduced font size
             fontWeight: 700,
-            lineHeight: '20px',
+            lineHeight: '24px', // Increased line height
+            opacity: isOpen ? 1 : 0,
+            transition: 'opacity 0.2s ease',
+            display: { sm: isOpen ? 'block' : 'none' },
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis', // Add ellipsis for long text
+            maxWidth: 'calc(100% - 32px)', // Ensure text doesn't overflow
+            flexShrink: 1, // Allow text to shrink if needed
           }}
         >
           Cerrar sesión
@@ -181,7 +264,7 @@ const NavbarAdmin = () => {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
