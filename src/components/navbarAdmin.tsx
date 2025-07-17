@@ -77,7 +77,7 @@ const NavbarAdmin = () => {
           lineHeight: '20px',
           letterSpacing: '0.1px',
           position: 'absolute',
-          top: { xs: 40, sm: 50 }, // Moved up
+          top: { xs: 61, sm: 71 }, // Adjusted to match Figma design
           left: { xs: 25, sm: 35 },
           maxWidth: '220px',
           opacity: isOpen ? 1 : 0,
@@ -97,7 +97,7 @@ const NavbarAdmin = () => {
           },
           borderBottom: '4px solid #3A332A',
           position: 'absolute',
-          top: { xs: 108, sm: 128 }, // Moved up
+          top: { xs: 113, sm: 133 }, // Slightly lower
           left: { xs: 13, sm: 10 },
           transition: 'width 0.3s ease',
         }}
