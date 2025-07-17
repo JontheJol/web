@@ -4,6 +4,7 @@ import '@fontsource/rowdies/400.css';
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import AddIcon from '../assets/addIcon';
+import EstanteList from '../components/EstanteList';
 import NavbarAdmin from '../components/navbarAdmin';
 
 const Estantes: React.FC = () => {
@@ -109,6 +110,7 @@ const Estantes: React.FC = () => {
         </Typography>
 
         {/* Divider Line */}
+        
         <Box
           sx={{
             width: '1144px',
@@ -117,8 +119,10 @@ const Estantes: React.FC = () => {
             marginBottom: '14px'
           }}
         />
+        <EstanteList />
 
       </Box>
+      
     </Box>
   );
 };
