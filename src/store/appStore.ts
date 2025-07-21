@@ -41,6 +41,7 @@ interface AppState {
   // Auth actions
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
+  confirmEmail: (email: string) => Promise<void>;
   logout: () => void;
   setAuthLoading: (loading: boolean) => void;
   setAuthError: (error: string | null) => void;
@@ -103,22 +104,26 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
   },
   register: async (data: RegisterData) => {
+    console.log('🏪 Store: register called with data:', data);
     set({ authLoading: true, authError: null });
     
     // Simulate API call
+    console.log('⏳ Store: Simulating API call...');
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     // Check if email already exists (simple validation)
     const existingUser = get().users.find(user => user.email === data.email);
     if (existingUser) {
+      console.log('❌ Store: Email already exists');
       set({
         authLoading: false,
         authError: 'Este correo electrónico ya está registrado',
       });
-      return;
+      throw new Error('Este correo electrónico ya está registrado');
     }
     
-    // Create new user and authenticate
+    // Create new user but DON'T authenticate yet
+    // User needs to confirm email first
     const newUser = {
       id: Date.now(),
       name: `${data.firstName} ${data.lastName}`,
@@ -126,18 +131,46 @@ export const useAppStore = create<AppState>((set, get) => ({
       age: 25, // Default age for demo
     };
     
-    // Add to users list and authenticate
+    console.log('✅ Store: User created successfully:', newUser);
+    
+    // Add to users list but keep user NOT authenticated
     set((state) => ({
       users: [...state.users, newUser],
-      isAuthenticated: true,
-      currentUser: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-      },
       authLoading: false,
       authError: null,
+      // Don't set isAuthenticated: true here
+      // User will be authenticated after email confirmation
     }));
+    
+    console.log('✅ Store: Registration completed successfully');
+    // Success - will trigger navigation to email confirmation
+  },
+  confirmEmail: async (email: string) => {
+    set({ authLoading: true, authError: null });
+    
+    // Simulate API call for email confirmation
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Find user by email and authenticate them
+    const user = get().users.find(u => u.email === email);
+    if (user) {
+      set({
+        isAuthenticated: true,
+        currentUser: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        authLoading: false,
+        authError: null,
+      });
+    } else {
+      set({
+        authLoading: false,
+        authError: 'Usuario no encontrado',
+      });
+      throw new Error('Usuario no encontrado');
+    }
   },
   logout: () => 
     set({

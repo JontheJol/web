@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import {
   Box,
   TextField,
@@ -15,9 +14,8 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, ArrowBack } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { registroUsuarioSchema, type RegistroUsuarioFormData } from '../utils/validation';
 import type { RegisterData } from '../store/appStore';
-
-interface RegisterFormData extends RegisterData {}
 
 interface RegisterFormProps {
   onRegister: (data: RegisterData) => Promise<void>;
@@ -25,40 +23,6 @@ interface RegisterFormProps {
   error: string | null;
   onBackToLogin?: () => void;
 }
-
-const schema = yup.object({
-  firstName: yup
-    .string()
-    .required('El nombre es requerido')
-    .min(2, 'El nombre debe tener al menos 2 caracteres'),
-  lastName: yup
-    .string()
-    .required('El apellido es requerido')
-    .min(2, 'El apellido debe tener al menos 2 caracteres'),
-  phone: yup
-    .string()
-    .required('El celular es requerido')
-    .matches(/^\d{10}$/, 'El celular debe tener 10 dígitos'),
-  curp: yup
-    .string()
-    .required('El CURP es requerido')
-    .matches(/^[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}$/, 'Formato de CURP inválido'),
-  rfc: yup
-    .string()
-    .required('El RFC es requerido')
-    .matches(/^[A-Z&Ñ]{3,4}\d{6}[A-V1-9][A-Z1-9][0-9A]$/, 'Formato de RFC inválido'),
-  email: yup
-    .string()
-    .email('Ingresa un correo electrónico válido')
-    .required('El correo electrónico es requerido'),
-  password: yup
-    .string()
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .matches(/(?=.*[a-z])/, 'Debe contener al menos una minúscula')
-    .matches(/(?=.*[A-Z])/, 'Debe contener al menos una mayúscula')
-    .matches(/(?=.*\d)/, 'Debe contener al menos un número')
-    .required('La contraseña es requerida'),
-});
 
 const RegisterForm: React.FC<RegisterFormProps> = ({
   onRegister,
@@ -73,8 +37,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormData>({
-    resolver: yupResolver(schema),
+    setValue,
+  } = useForm<RegistroUsuarioFormData>({
+    resolver: yupResolver(registroUsuarioSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -83,15 +48,44 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       rfc: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  // Función para llenar automáticamente con datos de prueba
+  const fillTestData = () => {
+    setValue('firstName', 'Juan');
+    setValue('lastName', 'Pérez');
+    setValue('phone', '5551234567');
+    setValue('curp', 'ABCD123456HMNEDF01');
+    setValue('rfc', 'ABC123456ABC');
+    setValue('email', 'juan@ejemplo.com');
+    setValue('password', 'Password123!');
+    setValue('confirmPassword', 'Password123!');
+  };
+
+  const onSubmit = async (data: RegistroUsuarioFormData) => {
+    console.log('🚀 onSubmit called with data:', data);
+    console.log('🔍 Form errors:', errors);
+    console.log('📊 Loading state:', loading);
+    
     try {
-      await onRegister(data);
-      navigate('/'); // Navigate to home on successful registration
+      console.log('📝 Starting registration process...');
+      // Convertir a RegisterData (sin confirmPassword)
+      const { confirmPassword, ...registerData } = data;
+      console.log('📝 Sending registration data:', registerData);
+      
+      await onRegister(registerData);
+      
+      console.log('✅ Registration successful, navigating to email confirmation');
+      // Navigate to email confirmation page with the user's email
+      navigate('/email-confirmation', { 
+        state: { email: data.email } 
+      });
     } catch (err) {
-      // Error handled by store
+      // Error handled by store, but let's log it for debugging
+      console.error('❌ Error en registro:', err);
+      // No need to navigate if there's an error
     }
   };
 
@@ -190,6 +184,28 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
         {/* Registration Form */}
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+          {/* Botón temporal para llenar datos de prueba */}
+          <Box sx={{ textAlign: 'center', mb: 2 }}>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={fillTestData}
+              sx={{
+                fontSize: '12px',
+                py: 0.5,
+                px: 2,
+                borderColor: 'rgba(69, 55, 38, 0.5)',
+                color: '#453726',
+                '&:hover': {
+                  borderColor: '#453726',
+                  backgroundColor: 'rgba(69, 55, 38, 0.1)',
+                },
+              }}
+            >
+              🧪 Llenar datos de prueba
+            </Button>
+          </Box>
+
           <Box
             sx={{
               display: 'grid',
@@ -489,6 +505,64 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     type={showPassword ? 'text' : 'password'}
                     error={!!errors.password}
                     helperText={errors.password?.message}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={handleTogglePasswordVisibility}
+                            edge="end"
+                            sx={{ color: '#453726' }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#ffffff',
+                        borderRadius: '10px',
+                        height: '48px',
+                        '& fieldset': {
+                          borderColor: 'rgba(69, 55, 38, 0.15)',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'rgba(69, 55, 38, 0.3)',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#453726',
+                        },
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Box>
+
+            {/* Confirmar Contraseña */}
+            <Box sx={{ gridColumn: { xs: '1', md: '2' } }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: 'League Spartan, sans-serif',
+                  fontWeight: 400,
+                  fontSize: '24px',
+                  color: '#4b453d',
+                  mb: 1,
+                }}
+              >
+                Confirmar Contraseña
+              </Typography>
+              <Controller
+                name="confirmPassword"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    type={showPassword ? 'text' : 'password'}
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword?.message}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">

@@ -10,6 +10,8 @@ import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import EmailConfirmation from './pages/EmailConfirmation';
+import ValidationExample from './pages/ValidationExample';
 import { useAppStore } from './store/appStore';
 
 const theme = createTheme({
@@ -77,6 +79,8 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/email-confirmation" element={<EmailConfirmation />} />
+              <Route path="/validation-example" element={<ValidationExample />} />
               <Route path="/" element={
                 <ProtectedRoute>
                   <Home />
