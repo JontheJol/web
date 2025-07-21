@@ -28,10 +28,26 @@ This is a React TypeScript CRUD application using:
 
 ### Form Handling
 - **Pattern**: Use reusable form components with props for different contexts (Add/Edit)
-- **Validation**: Yup schemas defined inline in form components
+- **Validation**: Use predefined Yup schemas from `src/utils/validation.ts` - DO NOT create new validation schemas
 - **Controller**: Wrap MUI inputs with React Hook Form `Controller`
 - **Navigation**: Forms automatically navigate back on successful submission
 - **Error handling**: Display store errors using MUI `Alert` components
+
+### Validation System (MANDATORY)
+- **Centralized Validation**: ALL form validation must use schemas from `src/utils/validation.ts`
+- **Available Schemas**: 
+  - `registroUsuarioSchema` - User registration forms
+  - `loginSchema` - Login forms
+  - `perfilUsuarioSchema` - User profile forms
+  - `libroSchema` - Book-related forms
+  - `prestamoSchema` - Loan/borrow forms
+  - `cambioContrasenaSchema` - Password change forms
+  - `configuracion2FASchema` - 2FA setup forms
+- **Base Schemas**: Use `baseSchemas` for individual field validation (nombreApellido, correo, celular, etc.)
+- **Real-time Validation**: Use `syncValidators` for on-the-fly validation while typing
+- **TypeScript Types**: Import form data types (e.g., `RegistroUsuarioFormData`, `LoginFormData`) from validation.ts
+- **DO NOT**: Create new Yup schemas inline in components - always use the centralized system
+- **Pattern**: `import { schemaName, FormDataType } from '../utils/validation'`
 
 ### Table Implementation
 - **Material React Table**: Configure with `MRT_ColumnDef<T>[]` and `useMemo`
@@ -84,3 +100,6 @@ When modifying this codebase:
 - Use Zustand actions for all state mutations
 - Maintain responsive design with MUI breakpoints
 - Keep type definitions close to their usage context
+- **ALWAYS use existing validation schemas from `src/utils/validation.ts`**
+- **NEVER create new Yup schemas - the validation system is complete and centralized**
+- Import the appropriate schema and TypeScript type for any form implementation
