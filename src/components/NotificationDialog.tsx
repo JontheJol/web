@@ -37,15 +37,15 @@ const getNotificationConfig = (type: NotificationType) => {
     success: {
       icon: CheckCircle,
       iconColor: '#fff9ec',
-      backgroundColor: '#453726',
-      buttonColor: '#a47149',
+      backgroundColor: '#2F5233',
+      buttonColor: '#8E9775',
       buttonTextColor: '#fff9ec',
     },
     error: {
       icon: Error,
       iconColor: '#ffffff',
-      backgroundColor: '#d32f2f',
-      buttonColor: '#b71c1c',
+      backgroundColor: '#453726',
+      buttonColor: '#A47149',
       buttonTextColor: '#ffffff',
     },
     warning: {
