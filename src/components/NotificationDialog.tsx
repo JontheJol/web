@@ -9,12 +9,10 @@ import {
 import {
   CheckCircle,
   Error,
-  Warning,
-  Info,
   Close,
 } from '@mui/icons-material';
 
-export type NotificationType = 'success' | 'error' | 'warning' | 'info';
+export type NotificationType = 'success' | 'error';
 
 export interface NotificationData {
   type: NotificationType;
@@ -46,20 +44,6 @@ const getNotificationConfig = (type: NotificationType) => {
       iconColor: '#ffffff',
       backgroundColor: '#453726',
       buttonColor: '#A47149',
-      buttonTextColor: '#ffffff',
-    },
-    warning: {
-      icon: Warning,
-      iconColor: '#ffffff',
-      backgroundColor: '#ff9800',
-      buttonColor: '#f57c00',
-      buttonTextColor: '#ffffff',
-    },
-    info: {
-      icon: Info,
-      iconColor: '#ffffff',
-      backgroundColor: '#2196f3',
-      buttonColor: '#1976d2',
       buttonTextColor: '#ffffff',
     },
   };
