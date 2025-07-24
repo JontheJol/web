@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Navigation from './components/Navigation';
+import NotificationDialog from './components/NotificationDialog';
 import ProtectedRoute from './components/ProtectedRoute';
 import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
@@ -56,7 +57,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const { isAuthenticated } = useAppStore();
+  const { isAuthenticated, notification, showNotification, hideNotification } = useAppStore();
 
   return (
     <ThemeProvider theme={theme}>
@@ -107,6 +108,13 @@ function App() {
               } />
             </Routes>
           </Container>
+          
+          {/* Global Notification Dialog */}
+          <NotificationDialog
+            open={showNotification}
+            notification={notification}
+            onClose={hideNotification}
+          />
         </div>
       </Router>
     </ThemeProvider>

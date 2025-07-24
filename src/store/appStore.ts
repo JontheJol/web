@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { NotificationData } from '../components/NotificationDialog';
 
 export interface User {
   id: number;
@@ -32,6 +33,9 @@ interface AppState {
   currentUser: AuthUser | null;
   authLoading: boolean;
   authError: string | null;
+  // Notification state
+  notification: NotificationData | null;
+  showNotification: boolean;
   // User CRUD actions
   addUser: (user: Omit<User, 'id'>) => void;
   removeUser: (id: number) => void;
@@ -45,6 +49,10 @@ interface AppState {
   logout: () => void;
   setAuthLoading: (loading: boolean) => void;
   setAuthError: (error: string | null) => void;
+  // Notification actions
+  showSuccessNotification: (title: string, message: string, buttonText?: string) => void;
+  showErrorNotification: (title: string, message: string, details?: Record<string, string>, buttonText?: string) => void;
+  hideNotification: () => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -60,21 +68,48 @@ export const useAppStore = create<AppState>((set, get) => ({
   currentUser: null,
   authLoading: false,
   authError: null,
+  // Notification state
+  notification: null,
+  showNotification: false,
   // User CRUD actions
-  addUser: (user) =>
+  addUser: (user) => {
     set((state) => ({
       users: [...state.users, { ...user, id: Date.now() }],
-    })),
-  removeUser: (id) =>
+    }));
+    // Show success notification
+    get().showSuccessNotification(
+      'Usuario agregado',
+      `El usuario ${user.name} ha sido agregado exitosamente`
+    );
+  },
+  removeUser: (id) => {
+    const user = get().users.find(u => u.id === id);
     set((state) => ({
       users: state.users.filter((user) => user.id !== id),
-    })),
-  updateUser: (id, updates) =>
+    }));
+    // Show success notification
+    if (user) {
+      get().showSuccessNotification(
+        'Usuario eliminado',
+        `El usuario ${user.name} ha sido eliminado exitosamente`
+      );
+    }
+  },
+  updateUser: (id, updates) => {
+    const user = get().users.find(u => u.id === id);
     set((state) => ({
       users: state.users.map((user) =>
         user.id === id ? { ...user, ...updates } : user
       ),
-    })),
+    }));
+    // Show success notification
+    if (user) {
+      get().showSuccessNotification(
+        'Usuario actualizado',
+        `El usuario ${updates.name || user.name} ha sido actualizado exitosamente`
+      );
+    }
+  },
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
   // Auth actions
@@ -96,11 +131,21 @@ export const useAppStore = create<AppState>((set, get) => ({
         authLoading: false,
         authError: null,
       });
+      // Show success notification
+      get().showSuccessNotification(
+        'Inicio de sesión exitoso',
+        `¡Bienvenido de vuelta!`
+      );
     } else {
       set({
         authLoading: false,
         authError: 'Credenciales incorrectas. Intenta con admin@booksmart.com / password',
       });
+      // Show error notification
+      get().showErrorNotification(
+        'Error de autenticación',
+        'Credenciales incorrectas. Intenta con admin@booksmart.com / password'
+      );
     }
   },
   register: async (data: RegisterData) => {
@@ -119,6 +164,12 @@ export const useAppStore = create<AppState>((set, get) => ({
         authLoading: false,
         authError: 'Este correo electrónico ya está registrado',
       });
+      // Show error notification
+      get().showErrorNotification(
+        'Error en el registro',
+        'Este correo electrónico ya está registrado',
+        { email: 'Ya existe una cuenta con este correo' }
+      );
       throw new Error('Este correo electrónico ya está registrado');
     }
     
@@ -142,6 +193,13 @@ export const useAppStore = create<AppState>((set, get) => ({
       // User will be authenticated after email confirmation
     }));
     
+    // Show success notification
+    get().showSuccessNotification(
+      'Registro exitoso',
+      'Tu cuenta ha sido creada. Revisa tu correo para confirmar tu email.',
+      'Continuar'
+    );
+    
     console.log('✅ Store: Registration completed successfully');
     // Success - will trigger navigation to email confirmation
   },
@@ -164,11 +222,21 @@ export const useAppStore = create<AppState>((set, get) => ({
         authLoading: false,
         authError: null,
       });
+      // Show success notification
+      get().showSuccessNotification(
+        'Email confirmado',
+        `¡Bienvenido ${user.name}! Tu cuenta ha sido activada exitosamente.`
+      );
     } else {
       set({
         authLoading: false,
         authError: 'Usuario no encontrado',
       });
+      // Show error notification
+      get().showErrorNotification(
+        'Error de confirmación',
+        'No se pudo confirmar el email. Usuario no encontrado.'
+      );
       throw new Error('Usuario no encontrado');
     }
   },
@@ -180,4 +248,31 @@ export const useAppStore = create<AppState>((set, get) => ({
     }),
   setAuthLoading: (authLoading) => set({ authLoading }),
   setAuthError: (authError) => set({ authError }),
+  // Notification actions
+  showSuccessNotification: (title: string, message: string, buttonText = 'Aceptar') =>
+    set({
+      notification: {
+        type: 'success',
+        title,
+        message,
+        buttonText,
+      },
+      showNotification: true,
+    }),
+  showErrorNotification: (title: string, message: string, details?: Record<string, string>, buttonText = 'Aceptar') =>
+    set({
+      notification: {
+        type: 'error',
+        title,
+        message,
+        details,
+        buttonText,
+      },
+      showNotification: true,
+    }),
+  hideNotification: () =>
+    set({
+      notification: null,
+      showNotification: false,
+    }),
 }));
